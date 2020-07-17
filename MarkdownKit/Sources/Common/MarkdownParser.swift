@@ -50,7 +50,7 @@ open class MarkdownParser {
   
   // MARK: Basic Elements
   public let header: MarkdownHeader
-  public let list: MarkdownList
+  public let list: GRMarkdownList
   public let quote: MarkdownQuote
   public let link: MarkdownLink
   public let automaticLink: MarkdownAutomaticLink
@@ -94,14 +94,14 @@ open class MarkdownParser {
     self.font = font
     self.color = color
     
-    self.header = MarkdownHeader()
-    self.list = MarkdownList()
+    self.header = MarkdownHeader(font: font)
+    self.list = GRMarkdownList()
     self.quote = MarkdownQuote()
     self.link = MarkdownLink()
     self.automaticLink = MarkdownAutomaticLink()
     self.bold = MarkdownBold()
     self.italic = MarkdownItalic()
-    self.code = MarkdownCode()
+    self.code = MarkdownCode(font: font)
     self.strikethrough = MarkdownStrikethrough()
 
     self.escapingElements = [codeEscaping, escaping]
