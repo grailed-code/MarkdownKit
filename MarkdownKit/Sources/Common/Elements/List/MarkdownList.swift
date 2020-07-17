@@ -86,7 +86,7 @@ final public class GRMarkdownList: MarkdownList {
       let paragraphStyle = NSMutableParagraphStyle()
       paragraphStyle.firstLineHeadIndent = 0
       paragraphStyle.headIndent = 16
-      paragraphStyle.paragraphSpacing = 4
+      paragraphStyle.paragraphSpacing = 12
       return paragraphStyle
     }
 }
