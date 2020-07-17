@@ -50,7 +50,7 @@ open class MarkdownParser {
   
   // MARK: Basic Elements
   public let header: MarkdownHeader
-  public let list: MarkdownList
+  public let list: GRMarkdownList
   public let quote: MarkdownQuote
   public let link: MarkdownLink
   public let automaticLink: MarkdownAutomaticLink
@@ -93,7 +93,7 @@ open class MarkdownParser {
     self.color = color
     
     header = MarkdownHeader(font: font)
-    list = MarkdownList(font: font)
+    list = GRMarkdownList(font: font)
     quote = MarkdownQuote(font: font)
     link = MarkdownLink(font: font)
     automaticLink = MarkdownAutomaticLink(font: font)
