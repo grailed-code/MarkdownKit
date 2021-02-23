@@ -10,7 +10,7 @@ import CoreGraphics
 
 open class MarkdownHeader: MarkdownLevelElement {
 
-  fileprivate static let regex = "^(#{1,%@})\\s*(.+)$"
+  fileprivate static let regex = "^(# {1,%@})\\s*(.+)$"
 
   open var maxLevel: Int
   open var font: MarkdownFont?
