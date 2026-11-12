@@ -8,7 +8,7 @@
 import Foundation
 
 open class MarkdownParser {
-  public struct EnabledElements: OptionSet {
+  public struct EnabledElements: OptionSet, Sendable {
     public let rawValue: Int
 
     public init(rawValue: Int) {
@@ -58,7 +58,7 @@ open class MarkdownParser {
   public let italic: MarkdownItalic
   public let code: MarkdownCode
   public let strikethrough: MarkdownStrikethrough
-  
+
   // MARK: Escaping Elements
   fileprivate var codeEscaping = MarkdownCodeEscaping()
   fileprivate var escaping = MarkdownEscaping()
@@ -69,6 +69,8 @@ open class MarkdownParser {
   open var enabledElements: EnabledElements {
     didSet {
       updateDefaultElements()
+      updateEscapingElements()
+      updateUnescapingElements()
     }
   }
 
@@ -76,7 +78,7 @@ open class MarkdownParser {
   public let color: MarkdownColor
   
   // MARK: Legacy Initializer
-  @available(*, deprecated, renamed: "init", message: "This constructor will be removed soon, please use the new opions constructor")
+  @available(*, deprecated, renamed: "init", message: "This constructor will be removed soon, please use the new options constructor")
   public convenience init(automaticLinkDetectionEnabled: Bool,
                           font: MarkdownFont = MarkdownParser.defaultFont,
                           customElements: [MarkdownElement] = []) {
@@ -92,35 +94,39 @@ open class MarkdownParser {
     self.font = font
     self.color = color
     
-    header = MarkdownHeader(font: font)
-    list = GRMarkdownList(font: font)
-    quote = MarkdownQuote(font: font)
-    link = MarkdownLink(font: font)
-    automaticLink = MarkdownAutomaticLink(font: font)
-    bold = MarkdownBold(font: font)
-    italic = MarkdownItalic(font: font)
-    code = MarkdownCode(font: font)
-    strikethrough = MarkdownStrikethrough(font: font)
+    self.header = MarkdownHeader(font: font)
+    self.list = GRMarkdownList()
+    self.quote = MarkdownQuote()
+    self.link = MarkdownLink()
+    self.automaticLink = MarkdownAutomaticLink()
+    self.bold = MarkdownBold()
+    self.italic = MarkdownItalic()
+    self.code = MarkdownCode(font: font)
+    self.strikethrough = MarkdownStrikethrough()
 
     self.escapingElements = [codeEscaping, escaping]
     self.unescapingElements = [code, unescaping]
     self.customElements = customElements
     self.enabledElements = enabledElements
     updateDefaultElements()
+    updateEscapingElements()
+    updateUnescapingElements()
   }
-  
+
   // MARK: Element Extensibility
+  public func replaceDefaultElement(_ defaultElement: MarkdownElement, with element: MarkdownElement) {
+    guard let index = defaultElements.firstIndex(where: { $0 === defaultElement }) else { return }
+	defaultElements[index] = element
+  }
+
   open func addCustomElement(_ element: MarkdownElement) {
     customElements.append(element)
   }
   
   open func removeCustomElement(_ element: MarkdownElement) {
-    guard let index = customElements.firstIndex(where: { someElement -> Bool in
-      return element === someElement
-    }) else {
-      return
+    if let index = customElements.firstIndex(where: { $0 === element }) {
+      customElements.remove(at: index)
     }
-    customElements.remove(at: index)
   }
   
   // MARK: Parsing
@@ -145,20 +151,36 @@ open class MarkdownParser {
   }
 
   fileprivate func updateDefaultElements() {
+    // Parsing order matters!
     let pairs: [(EnabledElements, MarkdownElement)] = [
-      (.automaticLink, automaticLink),
       (.header, header),
       (.list, list),
       (.quote, quote),
-      (.link, link),
       (.bold, bold),
       (.italic, italic),
-      (.code, code),
       (.strikethrough, strikethrough),
-      ]
-    defaultElements = pairs.filter({ (enabled, _) in
-      enabledElements.contains(enabled) })
-      .map({ (_, element) in
-        element })
+      (.link, link),
+      (.automaticLink, automaticLink),
+      (.code, code),
+    ]
+    defaultElements = pairs.compactMap { enabled, element in
+        enabledElements.contains(enabled) ? element : nil
+    }
+  }
+
+  fileprivate func updateEscapingElements() {
+    if enabledElements.contains(.code) {
+      escapingElements = [codeEscaping, escaping]
+    } else {
+      escapingElements = [escaping]
+    }
+  }
+
+  fileprivate func updateUnescapingElements() {
+    if enabledElements.contains(.code) {
+      unescapingElements = [code, unescaping]
+    } else {
+      unescapingElements = [unescaping]
+    }
   }
 }

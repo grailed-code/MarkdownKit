@@ -21,13 +21,15 @@ class ViewController: UIViewController {
     return NSLocalizedString("Markdown", comment: "").stringByDecodingHTMLEntities
   }()
   
-  fileprivate lazy var viewModel: MarkdownKitViewModel = {
+  fileprivate lazy var viewModel: ViewModel = {
     // Example with custom font
-    // fileprivate let markdownParser = MarkdownParser(font: UIFont(name: "Product Sans", size: UIFont.systemFontSize)!)
+    // let parser = MarkdownParser(font: UIFont(name: "Product Sans", size: UIFont.systemFontSize)!)
     let parser = MarkdownParser()
     parser.addCustomElement(MarkdownSubreddit())
+    parser.addCustomElement(MarkdownUnderline())
+    parser.addCustomElement(MarkdownLineBreak())
     
-    let viewModel = MarkdownKitViewModel(markdownParser: parser)
+    let viewModel = ViewModel(markdownParser: parser)
     viewModel.markdownAttributedStringChanged = { [weak self](attributtedString, error) in
       if let error = error {
         NSLog("Error requesting -> \(error)")

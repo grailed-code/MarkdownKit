@@ -7,8 +7,9 @@ MarkdownKit
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 [![License](https://img.shields.io/cocoapods/l/MarkdownKit.svg?style=flat)](http://cocoapods.org/pods/MarkdownKit)
 [![Platform](https://img.shields.io/cocoapods/p/MarkdownKit.svg?style=flat)](http://cocoapods.org/pods/MarkdownKit)
+[![CI](https://github.com/bmoliveira/MarkdownKit/actions/workflows/CI.yml/badge.svg)](https://github.com/bmoliveira/MarkdownKit/actions/workflows/CI.yml)
 
-MarkdownKit is a customizable and extensible Markdown parser for iOS. It supports many of the standard Markdown elements through the use of Regular Expressions. It also allows customization of font and color attributes for all the Markdown elements.
+MarkdownKit is a customizable and extensible Markdown parser for iOS and macOS. It supports many of the standard Markdown elements through the use of Regular Expressions. It also allows customization of font and color attributes for all the Markdown elements.
 
 ## Screenshot
 
@@ -56,7 +57,17 @@ github "ivanbruel/MarkdownKit"
 Afterwards, run the following command:
 
 ```ruby
-carthage update
+carthage update --use-xcframeworks
+```
+
+### Installation via Swift Package Manager
+
+MarkdownKit is available through [Swift Package Manager](https://swift.org/package-manager/).
+
+To add MarkdownKit as a dependency of your Swift package, simply add the following line to your `Package.swift` file:
+
+```swift
+.package(url: "https://github.com/bmoliveira/MarkdownKit.git", from: "1.7.2")
 ```
 
 ## Supported Elements
@@ -143,7 +154,7 @@ To run the example project, clone the repo, and run `pod install` from the Examp
 
 This library is heavily inspired in [TSMarkdownParser](https://github.com/laptobbe/TSMarkdownParser) and also [SwiftyMarkdown](https://github.com/SimonFairbairn/SwiftyMarkdown).
 
-Special thanks to [Michael Brown](https://github.com/mluisbrown) for helping out with the [UTF-16 Escaping/Unescaping](https://github.com/ivanbruel/MarkdownKit/blob/master/MarkdownKit/Classes/Extensions/String%2BUTF16.swift).
+Special thanks to [Michael Brown](https://github.com/mluisbrown) for helping out with the [UTF-16 Escaping/Unescaping](https://github.com/bmoliveira/MarkdownKit/blob/master/MarkdownKit/Sources/Common/Extensions/String%2BUTF16.swift).
 
 ## License
 

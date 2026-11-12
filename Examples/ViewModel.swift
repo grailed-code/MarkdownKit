@@ -10,7 +10,7 @@ import Foundation
 import MarkdownKit
 import Alamofire
 
-class MarkdownKitViewModel {
+class ViewModel: @unchecked Sendable {
   
   let markdownParser: MarkdownParser
   
@@ -25,13 +25,13 @@ class MarkdownKitViewModel {
   }
 }
 
-extension MarkdownKitViewModel {
+extension ViewModel {
   func parseString(markdownString: String) {
     markdownAttributedStringChanged?(markdownParser.parse(markdownString), nil)
   }
   
   func requestTestPage() {
-    AF.request(testingURL).responseString { [weak self]response in
+    AF.request(testingURL).responseString { [weak self] response in
       if let error = response.error {
         self?.markdownAttributedStringChanged?(nil, error)
         return
